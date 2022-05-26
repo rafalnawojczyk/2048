@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="font/stylesheet.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <title>2048</title>
+    </head>
+    <body>
+        <div class="container">
+            <header class="header">
+                <div><h1 class="header__title">2048</h1></div>
+                <div class="header__scoreboard">
+                    <div class="header__scoreboard--left">
+                        <p>Score</p>
+                        <span class="actual-score">0</span>
+                    </div>
+                    <div class="header__scoreboard--right">
+                        <p>Best</p>
+                        <span class="best-score">0</span>
+                    </div>
+                </div>
+                <div class="header__description">Try your best, and reach 2048 tile!</div>
+                <div class="header__buttons">
+                    <button class="header__btn header__btn--undo"><img src="img/undo.svg" /></button>
+                    <button class="header__btn header__btn--new-game">New Game</button>
+                </div>
+            </header>
+            <div class="game"></div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
