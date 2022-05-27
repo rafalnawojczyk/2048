@@ -12,8 +12,6 @@ const generateBoard = function () {
     for (let i = 0; i < 16; i++) {
         let tile = document.createElement("div");
         tile.classList.add(`game-cell`);
-        tile.dataset.curr = "";
-        tile.dataset.prev = "";
         tiles.push(tile);
         document.querySelector(".game").appendChild(tile);
     }
@@ -326,7 +324,7 @@ const updateTiles = function (event) {
         slideTiles(event);
         combineTiles(event);
         slideTiles(event);
-        if (movement === 0) {
+        if (movement === 0 && !document.querySelector(".game-over")) {
             savedMoves.pop();
         }
         if (movement > 0) {
