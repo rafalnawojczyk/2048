@@ -362,12 +362,9 @@ const saveActualState = function () {
     }
 };
 
-// check this onload,
-// load saved game state only if there was anything on board
-// think about why there are errors
 const loadSavedGame = function () {
-    let savedStateStored = localStorage.getItem("savedState").split(",");
-    let maxScoreStored = localStorage.getItem("savedBest");
+    let savedStateStored = windows.localStorage.getItem("savedState").split(",");
+    let maxScoreStored = windows.localStorage.getItem("savedBest");
     let val = 0;
 
     savedStateStored.forEach(el => (el >= 2 ? val++ : val));
@@ -494,8 +491,8 @@ const gameWon = function () {
 };
 
 const saveSessionStorage = function (lastState) {
-    localStorage.setItem("savedState", lastState);
-    localStorage.setItem("savedBest", document.querySelector(".best-score").textContent);
+    windows.localStorage.setItem("savedState", lastState);
+    windows.localStorage.setItem("savedBest", +document.querySelector(".best-score").textContent);
 };
 
 const startTouch = function (e) {
@@ -537,7 +534,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
     generateTile();
     generateTile();
-    if (localStorage.getItem("savedState")) {
+    if (windows.localStorage.getItem("savedState")) {
         loadSavedGame();
     }
 });
