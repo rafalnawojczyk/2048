@@ -358,6 +358,32 @@ const saveActualState = function () {
 
         lastState.push(score);
         savedMoves.push(lastState);
+        saveSessionStorage(lastState);
+    }
+};
+
+// check this onload,
+// load saved game state only if there was anything on board
+// think about why there are errors
+const loadSavedGame = function () {
+    let savedStateStored = localStorage.getItem("savedState").split(",");
+    let maxScoreStored = localStorage.getItem("savedBest");
+    let val = 0;
+
+    savedStateStored.forEach(el => (el >= 2 ? val++ : val));
+
+    if (val > 4) {
+        score = +savedStateStored[16];
+        document.querySelector(".actual-score").textContent = score;
+        maxScore = maxScoreStored;
+        document.querySelector(".best-score").textContent = +maxScoreStored;
+        for (let i = 0; i < 16; i++) {
+            if (savedStateStored[savedStateStored.length - 1]) {
+                updateCell(i, savedStateStored[i]);
+            } else {
+                clearCell(i);
+            }
+        }
     }
 };
 
@@ -467,6 +493,11 @@ const gameWon = function () {
     document.querySelector(".game").appendChild(winner);
 };
 
+const saveSessionStorage = function (lastState) {
+    localStorage.setItem("savedState", lastState);
+    localStorage.setItem("savedBest", document.querySelector(".best-score").textContent);
+};
+
 const startTouch = function (e) {
     initX = e.touches[0].clientX;
     initY = e.touches[0].clientY;
@@ -506,6 +537,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
     generateTile();
     generateTile();
+    if (localStorage.getItem("savedState")) {
+        loadSavedGame();
+    }
 });
 
 document.addEventListener("keydown", function (event) {
