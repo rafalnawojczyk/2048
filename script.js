@@ -9,6 +9,7 @@ let undoAnimation, newGameAnimation;
 let movement = 0;
 let initX = null;
 let initY = null;
+let won = false;
 
 const generateBoard = function () {
     for (let i = 0; i < 16; i++) {
@@ -321,6 +322,10 @@ const updateScore = function () {
 };
 
 const updateTiles = function (event) {
+    if (document.querySelector(".winner")) {
+        document.querySelector(".game").removeChild(document.querySelector(".winner"));
+    }
+
     if (event === "ArrowUp" || event === "ArrowDown" || event === "ArrowLeft" || event === "ArrowRight") {
         saveActualState();
         slideTiles(event);
@@ -335,6 +340,7 @@ const updateTiles = function (event) {
         }
 
         updateScore();
+        checkGameWon();
         checkGameOver();
     }
 };
@@ -443,6 +449,22 @@ const gameOver = function () {
 
         document.querySelector(".header").appendChild(child);
     }
+};
+
+const checkGameWon = function () {
+    if (won === false) {
+        tiles.forEach(el => (+el.textContent === 2048 ? gameWon() : ""));
+    }
+};
+
+const gameWon = function () {
+    won = true;
+    let winner = document.createElement("div");
+    winner.classList.add("winner");
+    winner.innerHTML = `<span class="winner__title">You won!</span> 
+                            <p class="winner__message">Swipe or use arrow keys to improve your score!</p>`;
+
+    document.querySelector(".game").appendChild(winner);
 };
 
 const startTouch = function (e) {

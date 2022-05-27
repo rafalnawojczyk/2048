@@ -27,22 +27,6 @@ h1 {
   width: 100%;
   height: 100vh; }
 
-.game {
-  height: 48rem;
-  width: 48rem;
-  display: grid;
-  grid-gap: 1.5rem;
-  padding: 1.5rem;
-  border-radius: 9px;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  background-color: #ae9e8e;
-  margin-top: 8rem;
-  margin-inline: auto; }
-  @media only screen and (max-width: 34.375em) {
-    .game {
-      margin-top: 4rem; } }
-
 .header {
   width: 48rem;
   margin-inline: auto;
@@ -130,6 +114,23 @@ h1 {
 .actual-score {
   transition: all 0.3s; }
 
+.game {
+  height: 48rem;
+  width: 48rem;
+  display: grid;
+  grid-gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 9px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  background-color: #ae9e8e;
+  margin-top: 8rem;
+  margin-inline: auto;
+  position: relative; }
+  @media only screen and (max-width: 34.375em) {
+    .game {
+      margin-top: 4rem; } }
+
 [class*="game-cell"] {
   border-radius: 9px;
   background-color: var(--color-bg);
@@ -150,6 +151,34 @@ h1 {
   opacity: 0;
   transform: translate(-50%, 200%);
   animation: slideUp 0.3s forwards; }
+
+.winner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border-radius: 9px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: scale(0.2);
+  background-color: rgba(174, 158, 142, 0.8);
+  animation: winInfo forwards 500ms; }
+  .winner__title {
+    color: var(--color-text-light);
+    font-size: 8rem;
+    text-shadow: 0.3rem 0 0 #72695f; }
+  .winner__message {
+    font-size: 2rem;
+    color: #fff;
+    text-shadow: 0.1rem 0 0 #72695f; }
+
+@keyframes winInfo {
+  to {
+    opacity: 1;
+    transform: scale(1); } }
 
 @keyframes slideUp {
   to {
