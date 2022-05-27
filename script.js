@@ -349,6 +349,8 @@ const saveActualState = function () {
         for (let key of tiles) {
             lastState.push(+key.textContent);
         }
+
+        lastState.push(score);
         savedMoves.push(lastState);
     }
 };
@@ -365,6 +367,8 @@ const undoMove = function (e) {
         for (let i = 0; i < 16; i++) {
             if (savedMoves[savedMoves.length - 1][i]) {
                 updateCell(i, savedMoves[savedMoves.length - 1][i]);
+                score = savedMoves[savedMoves.length - 1][16];
+                document.querySelector(".actual-score").textContent = score;
             } else {
                 clearCell(i);
             }
