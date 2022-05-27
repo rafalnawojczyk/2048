@@ -6,22 +6,26 @@
 html {
   font-size: 62.5%;
   box-sizing: border-box; }
+  @media only screen and (max-width: 34.375em) {
+    html {
+      font-size: 50%; } }
+  @media only screen and (max-width: 28em) {
+    html {
+      font-size: 42.5%; } }
 
 body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  font-family: "clear_sansbold", sans-serif; }
+  font-family: "clear_sansbold", sans-serif;
+  background-color: #faf8ef; }
 
 h1 {
   margin: 0; }
 
 .container {
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  background-color: #faf8ef; }
+  width: 100%;
+  height: 100vh; }
 
 .game {
   height: 48rem;
@@ -32,10 +36,12 @@ h1 {
   border-radius: 9px;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  overflow: hidden;
   background-color: #ae9e8e;
   margin-top: 8rem;
   margin-inline: auto; }
+  @media only screen and (max-width: 34.375em) {
+    .game {
+      margin-top: 4rem; } }
 
 .header {
   width: 48rem;
@@ -45,6 +51,9 @@ h1 {
   display: grid;
   grid-template-columns: 45% auto;
   position: relative; }
+  @media only screen and (max-width: 34.375em) {
+    .header {
+      margin-top: 4rem; } }
   .header__title {
     font-size: 7rem;
     letter-spacing: 4px; }

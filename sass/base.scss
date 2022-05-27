@@ -7,6 +7,13 @@
 html {
     font-size: 62.5%;
     box-sizing: border-box;
+
+    @media only screen and (max-width: 34.375em) {
+        font-size: 50%;
+    }
+    @media only screen and (max-width: 28em) {
+        font-size: 42.5%;
+    }
 }
 
 body {
@@ -14,6 +21,7 @@ body {
     padding: 0;
     margin: 0;
     font-family: "clear_sansbold", sans-serif;
+    background-color: rgb(250, 248, 239);
 }
 
 h1 {
@@ -21,11 +29,8 @@ h1 {
 }
 
 .container {
-    overflow: hidden;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
-    position: relative;
-    background-color: rgb(250, 248, 239);
 }
 
 .game {
@@ -37,10 +42,13 @@ h1 {
     border-radius: 9px;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    overflow: hidden;
     background-color: #ae9e8e;
     margin-top: 8rem;
     margin-inline: auto;
+
+    @media only screen and (max-width: 34.375em) {
+        margin-top: 4rem;
+    }
 }
 
 .header {
@@ -51,6 +59,10 @@ h1 {
     display: grid;
     grid-template-columns: 45% auto;
     position: relative;
+
+    @media only screen and (max-width: 34.375em) {
+        margin-top: 4rem;
+    }
 
     &__title {
         font-size: 7rem;
