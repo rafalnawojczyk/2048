@@ -1,8 +1,3 @@
-// TODO: when moving tiles, add to them animation
-// Sliding and merging tiles should be made on a temorarly created array that is substitution for a tiles array.
-// To calculate where the tile moved in specific direction, there will be a function that calculates that from datasets prev and curr, and creates array for each tile with x and y moves. Then run a function that makes animations based on taht array for each tile
-// Then run a function with delay(the same as animations duration), that will print these tiles on their places.
-// Calculate how much % or pixels tile has to move to reach its destination point.
 "use strict";
 
 let tiles = [];
@@ -11,6 +6,7 @@ let maxScore = 0;
 let savedMoves = [];
 let savingMovesAmount = 25;
 let undoAnimation, newGameAnimation;
+let movement = 0;
 
 const generateBoard = function () {
     for (let i = 0; i < 16; i++) {
@@ -48,9 +44,14 @@ const newGame = function (e) {
 const updateCell = function (number, value) {
     let actualValue = tiles[number].textContent;
     actualValue ? tiles[number].classList.remove(`tile-${actualValue}`) : "";
+    if (value > 1) {
+        tiles[number].textContent = value;
+        tiles[number].classList.add(`tile-${value}`);
+    }
 
-    tiles[number].textContent = value;
-    tiles[number].classList.add(`tile-${value}`);
+    if (value < 1) {
+        tiles[number].textContent = "";
+    }
 };
 
 const clearCell = function (number) {
@@ -62,10 +63,6 @@ const generateTile = function () {
     let unusedTiles = [];
     for (const [i, value] of tiles.entries()) {
         value.textContent < 1 ? unusedTiles.push(i) : "";
-    }
-
-    if (unusedTiles.length === 0) {
-        checkGameOver();
     }
 
     if (unusedTiles.length !== 0) {
@@ -101,17 +98,30 @@ const animationSlideDown = function (that) {
 };
 
 const slideTiles = function (direction) {
+    const checkForChanges = function (newRow, rowArray) {
+        let changes = 0;
+        for (let y = 0; y < 4; y++) {
+            if (newRow[y] !== rowArray[y]) {
+                changes++;
+            }
+        }
+        if (changes) {
+            movement++;
+        }
+    };
+
     if (direction === "ArrowDown") {
         for (let i = 0; i < 4; i++) {
             let columnArray = [+tiles[i].textContent, +tiles[i + 4].textContent, +tiles[i + 8].textContent, +tiles[i + 12].textContent];
             let filteredColumn = columnArray.filter(value => value);
-            let newColumn = new Array(4 - filteredColumn.length).fill("");
+            let newColumn = new Array(4 - filteredColumn.length).fill(0);
             newColumn = [...newColumn, ...filteredColumn];
 
             updateCell(i, newColumn[0]);
             updateCell(i + 4, newColumn[1]);
             updateCell(i + 8, newColumn[2]);
             updateCell(i + 12, newColumn[3]);
+            checkForChanges(newColumn, columnArray);
         }
     }
 
@@ -119,13 +129,14 @@ const slideTiles = function (direction) {
         for (let i = 0; i < 4; i++) {
             let columnArray = [+tiles[i + 12].textContent, +tiles[i + 8].textContent, +tiles[i + 4].textContent, +tiles[i].textContent];
             let filteredColumn = columnArray.filter(value => value);
-            let newColumn = new Array(4 - filteredColumn.length).fill("");
+            let newColumn = new Array(4 - filteredColumn.length).fill(0);
             newColumn = [...newColumn, ...filteredColumn];
 
             updateCell(i + 12, newColumn[0]);
             updateCell(i + 8, newColumn[1]);
             updateCell(i + 4, newColumn[2]);
             updateCell(i, newColumn[3]);
+            checkForChanges(newColumn, columnArray);
         }
     }
 
@@ -134,28 +145,32 @@ const slideTiles = function (direction) {
             if (i % 4 === 0) {
                 let rowArray = [+tiles[i].textContent, +tiles[i + 1].textContent, +tiles[i + 2].textContent, +tiles[i + 3].textContent];
                 let filteredRow = rowArray.filter(value => value);
-                let newRow = new Array(4 - filteredRow.length).fill("");
+                let newRow = new Array(4 - filteredRow.length).fill(0);
                 newRow = [...newRow, ...filteredRow];
 
                 updateCell(i, newRow[0]);
                 updateCell(i + 1, newRow[1]);
                 updateCell(i + 2, newRow[2]);
                 updateCell(i + 3, newRow[3]);
+                checkForChanges(newRow, rowArray);
             }
         }
     }
+
     if (direction === "ArrowLeft") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 let rowArray = [+tiles[i + 3].textContent, +tiles[i + 2].textContent, +tiles[i + 1].textContent, +tiles[i].textContent];
                 let filteredRow = rowArray.filter(value => value);
-                let newRow = new Array(4 - filteredRow.length).fill("");
+                let newRow = new Array(4 - filteredRow.length).fill(0);
                 newRow = [...newRow, ...filteredRow];
 
                 updateCell(i + 3, newRow[0]);
                 updateCell(i + 2, newRow[1]);
                 updateCell(i + 1, newRow[2]);
                 updateCell(i, newRow[3]);
+
+                checkForChanges(newRow, rowArray);
             }
         }
     }
@@ -165,35 +180,33 @@ const combineTiles = function (direction) {
     if (direction === "ArrowLeft") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
-                let firstTile = tiles[i];
-                let secondTile = tiles[i + 1];
-                let thirdTile = tiles[i + 2];
-                let fourthTile = tiles[i + 3];
-
-                if (+firstTile.textContent === +secondTile.textContent) {
-                    let value = +firstTile.textContent + +secondTile.textContent;
+                if (+tiles[i].textContent === +tiles[i + 1].textContent) {
+                    let value = +tiles[i].textContent + +tiles[i + 1].textContent;
                     if (value !== 0) {
                         clearCell(i + 1);
                         updateCell(i, value);
                         score += value;
+                        movement++;
                     }
                 }
 
-                if (+secondTile.textContent === +thirdTile.textContent) {
-                    let value = +secondTile.textContent + +thirdTile.textContent;
+                if (+tiles[i + 1].textContent === +tiles[i + 2].textContent) {
+                    let value = +tiles[i + 1].textContent + +tiles[i + 2].textContent;
                     if (value !== 0) {
                         clearCell(i + 2);
                         updateCell(i + 1, value);
                         score += value;
+                        movement++;
                     }
                 }
 
-                if (+thirdTile.textContent === +fourthTile.textContent) {
-                    let value = +thirdTile.textContent + +fourthTile.textContent;
+                if (+tiles[i + 2].textContent === +tiles[i + 3].textContent) {
+                    let value = +tiles[i + 2].textContent + +tiles[i + 3].textContent;
                     if (value !== 0) {
                         clearCell(i + 3);
                         updateCell(i + 2, value);
                         score += value;
+                        movement++;
                     }
                 }
             }
@@ -202,35 +215,33 @@ const combineTiles = function (direction) {
     if (direction === "ArrowRight") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
-                let firstTile = tiles[i + 3];
-                let secondTile = tiles[i + 2];
-                let thirdTile = tiles[i + 1];
-                let fourthTile = tiles[i];
-
-                if (+firstTile.textContent === +secondTile.textContent) {
-                    let value = +firstTile.textContent + +secondTile.textContent;
+                if (+tiles[i + 3].textContent === +tiles[i + 2].textContent) {
+                    let value = +tiles[i + 3].textContent + +tiles[i + 2].textContent;
                     if (value !== 0) {
                         clearCell(i + 3);
                         updateCell(i + 2, value);
                         score += value;
+                        movement++;
                     }
                 }
 
-                if (+secondTile.textContent === +thirdTile.textContent) {
-                    let value = +secondTile.textContent + +thirdTile.textContent;
+                if (+tiles[i + 2].textContent === +tiles[i + 1].textContent) {
+                    let value = +tiles[i + 2].textContent + +tiles[i + 1].textContent;
                     if (value !== 0) {
                         clearCell(i + 2);
                         updateCell(i + 1, value);
                         score += value;
+                        movement++;
                     }
                 }
 
-                if (+thirdTile.textContent === +fourthTile.textContent) {
-                    let value = +thirdTile.textContent + +fourthTile.textContent;
+                if (+tiles[i + 1].textContent === +tiles[i].textContent) {
+                    let value = +tiles[i + 1].textContent + +tiles[i].textContent;
                     if (value !== 0) {
                         clearCell(i + 1);
                         updateCell(i, value);
                         score += value;
+                        movement++;
                     }
                 }
             }
@@ -239,70 +250,66 @@ const combineTiles = function (direction) {
 
     if (direction === "ArrowUp") {
         for (let i = 0; i < 4; i++) {
-            let firstTile = tiles[i];
-            let secondTile = tiles[i + 4];
-            let thirdTile = tiles[i + 8];
-            let fourthTile = tiles[i + 12];
-
-            if (+firstTile.textContent === +secondTile.textContent) {
-                let value = +firstTile.textContent + +secondTile.textContent;
+            if (+tiles[i].textContent === +tiles[i + 4].textContent) {
+                let value = +tiles[i].textContent + +tiles[i + 4].textContent;
                 if (value !== 0) {
                     clearCell(i + 4);
                     updateCell(i, value);
                     score += value;
+                    movement++;
                 }
             }
 
-            if (+secondTile.textContent === +thirdTile.textContent) {
-                let value = +secondTile.textContent + +thirdTile.textContent;
+            if (+tiles[i + 4].textContent === +tiles[i + 8].textContent) {
+                let value = +tiles[i + 4].textContent + +tiles[i + 8].textContent;
                 if (value !== 0) {
                     clearCell(i + 8);
                     updateCell(i + 4, value);
                     score += value;
+                    movement++;
                 }
             }
 
-            if (+thirdTile.textContent === +fourthTile.textContent) {
-                let value = +thirdTile.textContent + +fourthTile.textContent;
+            if (+tiles[i + 8].textContent === +tiles[i + 12].textContent) {
+                let value = +tiles[i + 8].textContent + +tiles[i + 12].textContent;
                 if (value !== 0) {
                     clearCell(i + 12);
                     updateCell(i + 8, value);
                     score += value;
+                    movement++;
                 }
             }
         }
     }
     if (direction === "ArrowDown") {
         for (let i = 0; i < 4; i++) {
-            let firstTile = tiles[i + 12];
-            let secondTile = tiles[i + 8];
-            let thirdTile = tiles[i + 4];
-            let fourthTile = tiles[i];
-
-            if (+firstTile.textContent === +secondTile.textContent) {
-                let value = +firstTile.textContent + +secondTile.textContent;
+            if (+tiles[i + 12].textContent === +tiles[i + 8].textContent) {
+                let value = +tiles[i + 12].textContent + +tiles[i + 8].textContent;
                 if (value !== 0) {
                     clearCell(i + 12);
                     updateCell(i + 8, value);
                     score += value;
+                    movement++;
                 }
             }
 
-            if (+secondTile.textContent === +thirdTile.textContent) {
-                let value = +secondTile.textContent + +thirdTile.textContent;
+            if (+tiles[i + 8].textContent === +tiles[i + 4].textContent) {
+                let value = +tiles[i + 8].textContent + +tiles[i + 4].textContent;
                 if (value !== 0) {
                     clearCell(i + 8);
                     updateCell(i + 4, value);
                     score += value;
+                    movement++;
                 }
             }
 
-            if (+thirdTile.textContent === +fourthTile.textContent) {
-                let value = +thirdTile.textContent + +fourthTile.textContent;
+            if (+tiles[i + 4].textContent === +tiles[i].textContent) {
+                let value = +tiles[i + 4].textContent + +tiles[i].textContent;
                 if (value !== 0) {
                     clearCell(i + 4);
                     updateCell(i, value);
                     score += value;
+                    movement++;
                 }
             }
         }
@@ -314,12 +321,22 @@ const updateScore = function () {
 };
 
 const updateTiles = function (event) {
-    saveActualState();
-    slideTiles(event);
-    combineTiles(event);
-    slideTiles(event);
-    generateTile();
-    updateScore();
+    if (event === "ArrowUp" || event === "ArrowDown" || event === "ArrowLeft" || event === "ArrowRight") {
+        saveActualState();
+        slideTiles(event);
+        combineTiles(event);
+        slideTiles(event);
+        if (movement === 0) {
+            savedMoves.pop();
+        }
+        if (movement > 0) {
+            generateTile();
+            movement = 0;
+        }
+
+        updateScore();
+        checkGameOver();
+    }
 };
 
 const saveActualState = function () {
@@ -366,7 +383,7 @@ const checkGameOver = function () {
     });
 
     if (usedTiles === 16) {
-        // UP
+        // Column
         for (let i = 0; i < 4; i++) {
             if (
                 +tiles[i].textContent === +tiles[i + 4].textContent ||
@@ -378,20 +395,8 @@ const checkGameOver = function () {
                 end++;
             }
         }
-        // DOWN
-        for (let i = 0; i < 4; i++) {
-            if (
-                +tiles[i + 12].textContent === +tiles[i + 8].textContent ||
-                +tiles[i + 8].textContent === +tiles[i + 4].textContent ||
-                +tiles[i + 4].textContent === +tiles[i].textContent
-            ) {
-                return;
-            } else {
-                end++;
-            }
-        }
 
-        //left
+        // Row
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 if (
@@ -405,24 +410,9 @@ const checkGameOver = function () {
                 }
             }
         }
-
-        //right
-        for (let i = 0; i < 16; i++) {
-            if (i % 4 === 0) {
-                if (
-                    +tiles[i + 3].textContent === +tiles[i + 2].textContent ||
-                    +tiles[i + 2].textContent === +tiles[i + 1].textContent ||
-                    +tiles[i + 1].textContent === +tiles[i].textContent
-                ) {
-                    return;
-                } else {
-                    end++;
-                }
-            }
-        }
     }
 
-    if (end === 16) {
+    if (end === 8) {
         gameOver();
     }
 };
@@ -459,7 +449,6 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
 document.addEventListener("keydown", function (event) {
     if (event.repeat) {
-        console.log("repeated");
         return;
     }
     updateTiles(event.key);
