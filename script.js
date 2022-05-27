@@ -363,8 +363,8 @@ const saveActualState = function () {
 };
 
 const loadSavedGame = function () {
-    let savedStateStored = windows.localStorage.getItem("savedState").split(",");
-    let maxScoreStored = windows.localStorage.getItem("savedBest");
+    let savedStateStored = window.localStorage.getItem("savedState").split(",");
+    let maxScoreStored = window.localStorage.getItem("savedBest");
     let val = 0;
 
     savedStateStored.forEach(el => (el >= 2 ? val++ : val));
@@ -491,8 +491,8 @@ const gameWon = function () {
 };
 
 const saveSessionStorage = function (lastState) {
-    windows.localStorage.setItem("savedState", lastState);
-    windows.localStorage.setItem("savedBest", +document.querySelector(".best-score").textContent);
+    window.localStorage.setItem("savedState", lastState);
+    window.localStorage.setItem("savedBest", +document.querySelector(".best-score").textContent);
 };
 
 const startTouch = function (e) {
@@ -534,7 +534,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
     generateTile();
     generateTile();
-    if (windows.localStorage.getItem("savedState")) {
+    if (window.localStorage.getItem("savedState")) {
         loadSavedGame();
     }
 });
