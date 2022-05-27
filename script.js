@@ -3,35 +3,14 @@
 // To calculate where the tile moved in specific direction, there will be a function that calculates that from datasets prev and curr, and creates array for each tile with x and y moves. Then run a function that makes animations based on taht array for each tile
 // Then run a function with delay(the same as animations duration), that will print these tiles on their places.
 // Calculate how much % or pixels tile has to move to reach its destination point.
+"use strict";
 
-let tilesTemp = new Array(16).fill({});
 let tiles = [];
 let score = 0;
 let maxScore = 0;
 let savedMoves = [];
 let savingMovesAmount = 25;
 let undoAnimation, newGameAnimation;
-const map = {
-    1: [1, 1],
-    2: [1, 2],
-    3: [1, 3],
-    4: [1, 4],
-
-    5: [2, 1],
-    6: [2, 2],
-    7: [2, 3],
-    8: [2, 4],
-
-    9: [3, 1],
-    10: [3, 2],
-    11: [3, 3],
-    12: [3, 4],
-
-    13: [4, 1],
-    14: [4, 2],
-    15: [4, 3],
-    16: [4, 4],
-};
 
 const generateBoard = function () {
     for (let i = 0; i < 16; i++) {
@@ -122,7 +101,7 @@ const animationSlideDown = function (that) {
 };
 
 const slideTiles = function (direction) {
-    if (direction === "down") {
+    if (direction === "ArrowDown") {
         for (let i = 0; i < 4; i++) {
             let columnArray = [+tiles[i].textContent, +tiles[i + 4].textContent, +tiles[i + 8].textContent, +tiles[i + 12].textContent];
             let filteredColumn = columnArray.filter(value => value);
@@ -133,14 +112,10 @@ const slideTiles = function (direction) {
             updateCell(i + 4, newColumn[1]);
             updateCell(i + 8, newColumn[2]);
             updateCell(i + 12, newColumn[3]);
-
-            // TODO:
-            // let columnArray1 = [tilesTemp[i].endValue, tilesTemp[i + 4].endValue, tilesTemp[i + 8].endValue, tilesTemp[i + 12].endValue];
-            // let filteredColumn1 = columnArray1.filter(value => value);
         }
     }
 
-    if (direction === "up") {
+    if (direction === "ArrowUp") {
         for (let i = 0; i < 4; i++) {
             let columnArray = [+tiles[i + 12].textContent, +tiles[i + 8].textContent, +tiles[i + 4].textContent, +tiles[i].textContent];
             let filteredColumn = columnArray.filter(value => value);
@@ -154,7 +129,7 @@ const slideTiles = function (direction) {
         }
     }
 
-    if (direction === "right") {
+    if (direction === "ArrowRight") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 let rowArray = [+tiles[i].textContent, +tiles[i + 1].textContent, +tiles[i + 2].textContent, +tiles[i + 3].textContent];
@@ -169,7 +144,7 @@ const slideTiles = function (direction) {
             }
         }
     }
-    if (direction === "left") {
+    if (direction === "ArrowLeft") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 let rowArray = [+tiles[i + 3].textContent, +tiles[i + 2].textContent, +tiles[i + 1].textContent, +tiles[i].textContent];
@@ -187,7 +162,7 @@ const slideTiles = function (direction) {
 };
 
 const combineTiles = function (direction) {
-    if (direction === "left") {
+    if (direction === "ArrowLeft") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 let firstTile = tiles[i];
@@ -197,28 +172,34 @@ const combineTiles = function (direction) {
 
                 if (+firstTile.textContent === +secondTile.textContent) {
                     let value = +firstTile.textContent + +secondTile.textContent;
-                    clearCell(i + 1);
-                    updateCell(i, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 1);
+                        updateCell(i, value);
+                        score += value;
+                    }
                 }
 
                 if (+secondTile.textContent === +thirdTile.textContent) {
                     let value = +secondTile.textContent + +thirdTile.textContent;
-                    clearCell(i + 2);
-                    updateCell(i + 1, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 2);
+                        updateCell(i + 1, value);
+                        score += value;
+                    }
                 }
 
                 if (+thirdTile.textContent === +fourthTile.textContent) {
                     let value = +thirdTile.textContent + +fourthTile.textContent;
-                    clearCell(i + 3);
-                    updateCell(i + 2, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 3);
+                        updateCell(i + 2, value);
+                        score += value;
+                    }
                 }
             }
         }
     }
-    if (direction === "right") {
+    if (direction === "ArrowRight") {
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
                 let firstTile = tiles[i + 3];
@@ -228,29 +209,35 @@ const combineTiles = function (direction) {
 
                 if (+firstTile.textContent === +secondTile.textContent) {
                     let value = +firstTile.textContent + +secondTile.textContent;
-                    clearCell(i + 3);
-                    updateCell(i + 2, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 3);
+                        updateCell(i + 2, value);
+                        score += value;
+                    }
                 }
 
                 if (+secondTile.textContent === +thirdTile.textContent) {
                     let value = +secondTile.textContent + +thirdTile.textContent;
-                    clearCell(i + 2);
-                    updateCell(i + 1, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 2);
+                        updateCell(i + 1, value);
+                        score += value;
+                    }
                 }
 
                 if (+thirdTile.textContent === +fourthTile.textContent) {
                     let value = +thirdTile.textContent + +fourthTile.textContent;
-                    clearCell(i + 1);
-                    updateCell(i, value);
-                    score += value;
+                    if (value !== 0) {
+                        clearCell(i + 1);
+                        updateCell(i, value);
+                        score += value;
+                    }
                 }
             }
         }
     }
 
-    if (direction === "up") {
+    if (direction === "ArrowUp") {
         for (let i = 0; i < 4; i++) {
             let firstTile = tiles[i];
             let secondTile = tiles[i + 4];
@@ -259,27 +246,33 @@ const combineTiles = function (direction) {
 
             if (+firstTile.textContent === +secondTile.textContent) {
                 let value = +firstTile.textContent + +secondTile.textContent;
-                clearCell(i + 4);
-                updateCell(i, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 4);
+                    updateCell(i, value);
+                    score += value;
+                }
             }
 
             if (+secondTile.textContent === +thirdTile.textContent) {
                 let value = +secondTile.textContent + +thirdTile.textContent;
-                clearCell(i + 8);
-                updateCell(i + 4, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 8);
+                    updateCell(i + 4, value);
+                    score += value;
+                }
             }
 
             if (+thirdTile.textContent === +fourthTile.textContent) {
                 let value = +thirdTile.textContent + +fourthTile.textContent;
-                clearCell(i + 12);
-                updateCell(i + 8, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 12);
+                    updateCell(i + 8, value);
+                    score += value;
+                }
             }
         }
     }
-    if (direction === "down") {
+    if (direction === "ArrowDown") {
         for (let i = 0; i < 4; i++) {
             let firstTile = tiles[i + 12];
             let secondTile = tiles[i + 8];
@@ -288,23 +281,29 @@ const combineTiles = function (direction) {
 
             if (+firstTile.textContent === +secondTile.textContent) {
                 let value = +firstTile.textContent + +secondTile.textContent;
-                clearCell(i + 12);
-                updateCell(i + 8, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 12);
+                    updateCell(i + 8, value);
+                    score += value;
+                }
             }
 
             if (+secondTile.textContent === +thirdTile.textContent) {
                 let value = +secondTile.textContent + +thirdTile.textContent;
-                clearCell(i + 8);
-                updateCell(i + 4, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 8);
+                    updateCell(i + 4, value);
+                    score += value;
+                }
             }
 
             if (+thirdTile.textContent === +fourthTile.textContent) {
                 let value = +thirdTile.textContent + +fourthTile.textContent;
-                clearCell(i + 4);
-                updateCell(i, value);
-                score += value;
+                if (value !== 0) {
+                    clearCell(i + 4);
+                    updateCell(i, value);
+                    score += value;
+                }
             }
         }
     }
@@ -316,38 +315,11 @@ const updateScore = function () {
 
 const updateTiles = function (event) {
     saveActualState();
-    tilesTempStart();
-    if (event === "ArrowDown") {
-        slideTiles("down");
-        combineTiles("down");
-        slideTiles("down");
-        generateTile();
-        updateScore();
-    }
-
-    if (event === "ArrowUp") {
-        slideTiles("up");
-        combineTiles("up");
-        slideTiles("up");
-        generateTile();
-        updateScore();
-    }
-
-    if (event === "ArrowLeft") {
-        slideTiles("left");
-        combineTiles("left");
-        slideTiles("left");
-        generateTile();
-        updateScore();
-    }
-
-    if (event === "ArrowRight") {
-        slideTiles("right");
-        combineTiles("right");
-        slideTiles("right");
-        generateTile();
-        updateScore();
-    }
+    slideTiles(event);
+    combineTiles(event);
+    slideTiles(event);
+    generateTile();
+    updateScore();
 };
 
 const saveActualState = function () {
@@ -385,20 +357,6 @@ const undoMove = function (e) {
     }
 };
 
-const tilesTempStart = function () {
-    //TODO: clear tilesTemp after each move in printing function
-    for (let i = 0; i < 16; i++) {
-        tilesTemp[i].startingCords = map[i + 1];
-        tilesTemp[i].endCords = map[i + 1];
-
-        const values = 0 + +tiles[i].textContent;
-        console.log(values);
-        tilesTemp[i].startingValue = values;
-        tilesTemp[i].endValue = values;
-    }
-    console.log(tilesTemp);
-};
-
 const checkGameOver = function () {
     let usedTiles = 0;
     let end = 0;
@@ -410,15 +368,10 @@ const checkGameOver = function () {
     if (usedTiles === 16) {
         // UP
         for (let i = 0; i < 4; i++) {
-            let firstTile = tiles[i];
-            let secondTile = tiles[i + 4];
-            let thirdTile = tiles[i + 8];
-            let fourthTile = tiles[i + 12];
-
             if (
-                +firstTile.textContent === +secondTile.textContent ||
-                +secondTile.textContent === +thirdTile.textContent ||
-                +thirdTile.textContent === +fourthTile.textContent
+                +tiles[i].textContent === +tiles[i + 4].textContent ||
+                +tiles[i + 4].textContent === +tiles[i + 8].textContent ||
+                +tiles[i + 8].textContent === +tiles[i + 12].textContent
             ) {
                 return;
             } else {
@@ -427,15 +380,10 @@ const checkGameOver = function () {
         }
         // DOWN
         for (let i = 0; i < 4; i++) {
-            let firstTile = tiles[i + 12];
-            let secondTile = tiles[i + 8];
-            let thirdTile = tiles[i + 4];
-            let fourthTile = tiles[i];
-
             if (
-                +firstTile.textContent === +secondTile.textContent ||
-                +secondTile.textContent === +thirdTile.textContent ||
-                +thirdTile.textContent === +fourthTile.textContent
+                +tiles[i + 12].textContent === +tiles[i + 8].textContent ||
+                +tiles[i + 8].textContent === +tiles[i + 4].textContent ||
+                +tiles[i + 4].textContent === +tiles[i].textContent
             ) {
                 return;
             } else {
@@ -444,18 +392,12 @@ const checkGameOver = function () {
         }
 
         //left
-
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
-                let firstTile = tiles[i];
-                let secondTile = tiles[i + 1];
-                let thirdTile = tiles[i + 2];
-                let fourthTile = tiles[i + 3];
-
                 if (
-                    +firstTile.textContent === +secondTile.textContent ||
-                    +secondTile.textContent === +thirdTile.textContent ||
-                    +thirdTile.textContent === +fourthTile.textContent
+                    +tiles[i].textContent === +tiles[i + 1].textContent ||
+                    +tiles[i + 1].textContent === +tiles[i + 2].textContent ||
+                    +tiles[i + 2].textContent === +tiles[i + 3].textContent
                 ) {
                     return;
                 } else {
@@ -467,15 +409,10 @@ const checkGameOver = function () {
         //right
         for (let i = 0; i < 16; i++) {
             if (i % 4 === 0) {
-                let firstTile = tiles[i + 3];
-                let secondTile = tiles[i + 2];
-                let thirdTile = tiles[i + 1];
-                let fourthTile = tiles[i];
-
                 if (
-                    +firstTile.textContent === +secondTile.textContent ||
-                    +secondTile.textContent === +thirdTile.textContent ||
-                    +thirdTile.textContent === +fourthTile.textContent
+                    +tiles[i + 3].textContent === +tiles[i + 2].textContent ||
+                    +tiles[i + 2].textContent === +tiles[i + 1].textContent ||
+                    +tiles[i + 1].textContent === +tiles[i].textContent
                 ) {
                     return;
                 } else {
@@ -491,8 +428,6 @@ const checkGameOver = function () {
 };
 
 const gameOver = function () {
-    //TODO: Change color of undo button, or make it more visible(popping). Add game over paragraph between header and game, newGame() should remove class from this paragraph, Player can use Undo to play still the same game. Undo should remove this paragraph as well
-
     if (!document.querySelector(".game-over")) {
         const buttonPulsate = [
             { transform: "scale(1)", backgroundColor: "#7d6b59" },
@@ -517,15 +452,16 @@ const gameOver = function () {
 };
 
 document.addEventListener("DOMContentLoaded", function (e) {
-    e.preventDefault();
-
     generateBoard();
-
     generateTile();
     generateTile();
 });
 
 document.addEventListener("keydown", function (event) {
+    if (event.repeat) {
+        console.log("repeated");
+        return;
+    }
     updateTiles(event.key);
 });
 
