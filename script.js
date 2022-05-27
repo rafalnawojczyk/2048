@@ -7,6 +7,8 @@ let savedMoves = [];
 let savingMovesAmount = 25;
 let undoAnimation, newGameAnimation;
 let movement = 0;
+let initX = null;
+let initY = null;
 
 const generateBoard = function () {
     for (let i = 0; i < 16; i++) {
@@ -439,6 +441,41 @@ const gameOver = function () {
     }
 };
 
+const startTouch = function (e) {
+    initX = e.touches[0].clientX;
+    initY = e.touches[0].clientY;
+};
+
+const moveTouch = function (e) {
+    e.preventDefault();
+
+    if (initX === null || initY === null) return;
+    let currentX = e.touches[0].clientX;
+    let currentY = e.touches[0].clientY;
+
+    let moveX = initX - currentX;
+    let moveY = initY - currentY;
+
+    if (Math.abs(moveX) > Math.abs(moveY)) {
+        if (moveX > 0) {
+            updateTiles("ArrowLeft");
+        } else {
+            updateTiles("ArrowRight");
+        }
+    } else {
+        if (moveY > 0) {
+            updateTiles("ArrowUp");
+        } else {
+            updateTiles("ArrowDown");
+        }
+    }
+
+    initX = initY = null;
+};
+
+document.querySelector(".game").addEventListener("touchstart", startTouch, false);
+document.querySelector(".game").addEventListener("touchmove", moveTouch, false);
+
 document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
     generateTile();
@@ -454,3 +491,13 @@ document.addEventListener("keydown", function (event) {
 
 document.querySelector(".header__btn--undo").addEventListener("mouseup", undoMove);
 document.querySelector(".header__btn--new-game").addEventListener("mouseup", newGame);
+
+window.addEventListener(
+    "keydown",
+    function (e) {
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+            e.preventDefault();
+        }
+    },
+    false
+);
