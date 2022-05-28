@@ -34,7 +34,7 @@ h1 {
 }
 
 .header {
-    width: 48rem;
+    max-width: 48rem;
     margin-inline: auto;
     margin-top: 8rem;
     color: var(--color-text-dark);
@@ -155,7 +155,7 @@ h1 {
 
 .game {
     height: 48rem;
-    width: 48rem;
+    max-width: 48rem;
     display: grid;
     grid-gap: 1.5rem;
     padding: 1.5rem;
@@ -168,6 +168,8 @@ h1 {
     position: relative;
 
     @media only screen and (max-width: 34.375em) {
+        max-width: 80vw;
+        height: 80vw;
         margin-top: 4rem;
     }
 }
@@ -195,7 +197,7 @@ h1 {
 
     opacity: 0;
     transform: translate(-50%, 200%);
-
+    pointer-events: none;
     animation: slideUp 0.3s forwards;
 }
 
@@ -213,17 +215,20 @@ h1 {
     transform: scale(0.2);
     background-color: rgba(174, 158, 142, 0.8);
     animation: winInfo forwards 500ms;
+    pointer-events: none;
 
     &__title {
         color: var(--color-text-light);
         font-size: 8rem;
         text-shadow: 0.3rem 0 0 #72695f;
+        pointer-events: none;
     }
 
     &__message {
         font-size: 2rem;
         color: #fff;
         text-shadow: 0.1rem 0 0 #72695f;
+        pointer-events: none;
     }
 }
 
@@ -298,5 +303,26 @@ h1 {
 .tile-2048 {
     font-size: 3.5rem;
     --color-bg: #c7c71e;
+    --color-text: #ffefec;
+}
+
+.tile-4096 {
+    font-size: 3.5rem;
+    --color-bg: #cccc08;
+    --color-text: #ffefec;
+}
+
+.tile-8192 {
+    font-size: 3.5rem;
+    --color-bg: rgb(136, 65, 54);
+    --color-text: #ffefec;
+}
+
+.tile-16384,
+.tile-32768,
+.tile-32768,
+.tile-65536 {
+    font-size: 3rem;
+    --color-bg: rgb(134, 54, 42);
     --color-text: #ffefec;
 }
