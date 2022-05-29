@@ -1,6 +1,6 @@
 :root {
     --color-bg: #d9c5b2;
-    --color-text-dark: #72695f;
+    --color-text-dark: #574f47;
     --color-text-light: #faf8f5;
 }
 
@@ -68,122 +68,6 @@ h1 {
     100% {
         transform: scale(1);
         color: #574f47;
-    }
-}
-
-.instruction {
-    max-width: 48rem;
-    margin-inline: auto;
-    margin-top: 4rem;
-    color: var(--color-text-dark);
-
-    @media only screen and (max-width: 21.87em) {
-        margin-left: 1rem;
-        margin-right: 1rem;
-    }
-    &__desktop {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        @media only screen and (max-width: 21.87em) {
-            margin-left: 1rem;
-            flex-direction: column-reverse;
-        }
-    }
-
-    &__arrows {
-        max-width: 50%;
-        display: inline-block;
-        display: grid;
-        grid-gap: 0.4rem;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        overflow: hidden;
-
-        align-items: center;
-        justify-items: center;
-        transition: all 1s ease-in;
-        padding: 0.5rem;
-        margin-right: 1rem;
-    }
-
-    &__arrow {
-        width: 3rem;
-        height: 3rem;
-        padding: 1rem;
-        display: inline-block;
-        border: 1px solid currentColor;
-        border-radius: 9px;
-        margin-top: 0;
-        color: #574f47;
-        transition: all 1s ease-in;
-        transform: scale(1);
-
-        &--up {
-            grid-row: 1 / 2;
-            grid-column: 2 / 3;
-
-            &.js-animation {
-                animation: 0.5s forwards scaleUp ease-in;
-                animation-delay: 0.2s;
-            }
-
-            &.js-animation-fast {
-                animation: 0.1s forwards scaleUpFast ease-in;
-            }
-        }
-        &--left {
-            grid-row: 2 / 3;
-            grid-column: 1 / 2;
-
-            &.js-animation {
-                animation: 0.5s forwards scaleUp ease-in;
-            }
-            &.js-animation-fast {
-                animation: 0.1s forwards scaleUpFast ease-in;
-            }
-        }
-        &--down {
-            grid-row: 2 / 3;
-            grid-column: 2 / 3;
-
-            &.js-animation {
-                animation: 0.5s forwards scaleUp ease-in;
-                animation-delay: 0.3s;
-            }
-            &.js-animation-fast {
-                animation: 0.1s forwards scaleUpFast ease-in;
-            }
-        }
-        &--right {
-            grid-row: 2 / 3;
-            grid-column: 3 / 4;
-
-            &.js-animation {
-                animation: 0.5s forwards scaleUp ease-in;
-                animation-delay: 0.6s;
-            }
-            &.js-animation-fast {
-                animation: 0.1s forwards scaleUpFast ease-in;
-            }
-        }
-    }
-
-    &__text {
-        font-family: "Open Sans", sans-serif;
-        justify-self: end;
-        align-self: start;
-        max-width: 25rem;
-        font-size: 1.6rem;
-        line-height: 1.4;
-        @media only screen and (max-width: 21.87em) {
-            align-self: center;
-            margin-bottom: 2rem;
-        }
-
-        span {
-            font-weight: 600;
-        }
     }
 }
 
@@ -391,6 +275,187 @@ h1 {
         color: #fff;
         text-shadow: 0.1rem 0 0 #72695f;
         pointer-events: none;
+    }
+}
+
+.instruction {
+    max-width: 48rem;
+    margin-inline: auto;
+    margin-top: 4rem;
+    color: var(--color-text-dark);
+
+    @media only screen and (max-width: 21.87em) {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    &__desktop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        @media only screen and (max-width: 21.87em) {
+            margin-left: 1rem;
+            flex-direction: column-reverse;
+        }
+
+        @media only screen and(pointer:coarse) {
+            display: none;
+        }
+    }
+
+    &__arrows {
+        max-width: 50%;
+        display: inline-block;
+        display: grid;
+        grid-gap: 0.4rem;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        overflow: hidden;
+
+        align-items: center;
+        justify-items: center;
+        transition: all 1s ease-in;
+        padding: 0.5rem;
+        margin-right: 1rem;
+    }
+
+    &__arrow {
+        width: 3rem;
+        height: 3rem;
+        padding: 1rem;
+        display: inline-block;
+        border: 1px solid currentColor;
+        border-radius: 9px;
+        margin-top: 0;
+        color: #574f47;
+        transition: all 1s ease-in;
+        transform: scale(1);
+
+        &--up {
+            grid-row: 1 / 2;
+            grid-column: 2 / 3;
+
+            &.js-animation {
+                animation: 0.5s forwards scaleUp ease-in;
+                animation-delay: 0.2s;
+            }
+
+            &.js-animation-fast {
+                animation: 0.1s forwards scaleUpFast ease-in;
+            }
+        }
+        &--left {
+            grid-row: 2 / 3;
+            grid-column: 1 / 2;
+
+            &.js-animation {
+                animation: 0.5s forwards scaleUp ease-in;
+            }
+            &.js-animation-fast {
+                animation: 0.1s forwards scaleUpFast ease-in;
+            }
+        }
+        &--down {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+
+            &.js-animation {
+                animation: 0.5s forwards scaleUp ease-in;
+                animation-delay: 0.3s;
+            }
+            &.js-animation-fast {
+                animation: 0.1s forwards scaleUpFast ease-in;
+            }
+        }
+        &--right {
+            grid-row: 2 / 3;
+            grid-column: 3 / 4;
+
+            &.js-animation {
+                animation: 0.5s forwards scaleUp ease-in;
+                animation-delay: 0.6s;
+            }
+            &.js-animation-fast {
+                animation: 0.1s forwards scaleUpFast ease-in;
+            }
+        }
+    }
+
+    &__text {
+        font-family: "Open Sans", sans-serif;
+        justify-self: end;
+        align-self: start;
+        max-width: 25rem;
+        font-size: 1.6rem;
+        line-height: 1.4;
+        @media only screen and (max-width: 21.87em) {
+            align-self: center;
+            margin-bottom: 2rem;
+        }
+
+        @media only screen and (pointer: coarse) {
+            font-size: 2.2rem;
+            line-height: 1.6;
+        }
+
+        span {
+            font-weight: 600;
+        }
+    }
+
+    &__mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 4rem;
+
+        @media only screen and (max-width: 21.87em) {
+            flex-direction: column-reverse;
+        }
+
+        @media only screen and(pointer:fine) {
+            display: none;
+        }
+    }
+
+    &__phone-box {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    &__phone-svg {
+        max-width: 20rem;
+    }
+
+    &__hand-svg {
+        width: 10rem;
+        height: 10rem;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.5s;
+
+        &.js-animation {
+            animation: 1.5s forwards handDrag ease-in;
+        }
+    }
+}
+
+@keyframes handDrag {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    66% {
+        transform: translate(-50%, -70%) scale(0.99);
+    }
+
+    100% {
+        transform: translate(-50%, -50%);
     }
 }
 

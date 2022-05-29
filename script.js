@@ -398,6 +398,8 @@ const moveTouch = function (e) {
     let moveY = initY - currentY;
 
     if (Math.abs(moveX) > Math.abs(moveY)) {
+        arrowAnimationInterval ? clearInterval(arrowAnimationInterval) : "";
+
         if (moveX > 0) {
             updateTiles("ArrowLeft");
         } else {
@@ -417,14 +419,17 @@ const moveTouch = function (e) {
 const animateArrows = function () {
     const arrowKeys = document.querySelectorAll(".instruction__arrow");
     const arrowContainer = document.querySelector(".instruction__arrows");
+    const handSvg = document.querySelector(".instruction__hand-svg");
 
     arrowKeys.forEach(el => el.classList.toggle("js-animation"));
-    arrowContainer.classList.toggle(".js-animation");
+    arrowContainer.classList.toggle("js-animation");
+    handSvg.classList.toggle("js-animation");
 
     setTimeout(function () {
         arrowKeys.forEach(el => el.classList.toggle("js-animation"));
-        arrowContainer.classList.toggle(".js-animation");
-    }, 1500);
+        arrowContainer.classList.toggle("js-animation");
+        handSvg.classList.toggle("js-animation");
+    }, 2000);
 };
 
 const highlightKey = function (event) {
