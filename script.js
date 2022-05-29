@@ -158,12 +158,12 @@ const combineTiles = function (direction) {
         column3: [8, 4, 2, 1],
         column4: [12, 0, 3, 0],
         divisor: [1, 1, 4, 4],
-        clear1: [4, 12, 1, 3],
-        clear2: [8, 8, 2, 2],
-        clear3: [12, 4, 3, 1],
-        update1: [0, 8, 0, 2],
-        update2: [4, 4, 1, 1],
-        update3: [8, 0, 2, 0],
+        clear1: [4, 8, 1, 2],
+        clear2: [8, 4, 2, 1],
+        clear3: [12, 0, 3, 0],
+        update1: [0, 12, 0, 3],
+        update2: [4, 8, 1, 2],
+        update3: [8, 4, 2, 1],
     };
 
     const num = dir[direction];
