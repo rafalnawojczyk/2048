@@ -12,6 +12,9 @@ html {
   @media only screen and (max-width: 28em) {
     html {
       font-size: 42.5%; } }
+  @media only screen and (max-width: 18.75em) {
+    html {
+      font-size: 35%; } }
 
 body {
   box-sizing: border-box;
@@ -27,17 +30,126 @@ h1 {
   width: 100%;
   height: 100vh; }
 
+@keyframes scaleUp {
+  0% {
+    transform: scale(1);
+    color: #574f47; }
+  50% {
+    transform: scale(1.1);
+    color: #c09971; }
+  100% {
+    transform: scale(1);
+    color: #574f47; } }
+
+@keyframes scaleUpFast {
+  0% {
+    transform: scale(1);
+    color: #574f47; }
+  50% {
+    transform: scale(1.05);
+    color: #c09971; }
+  100% {
+    transform: scale(1);
+    color: #574f47; } }
+
+.instruction {
+  max-width: 48rem;
+  margin-inline: auto;
+  margin-top: 4rem;
+  color: var(--color-text-dark); }
+  @media only screen and (max-width: 21.87em) {
+    .instruction {
+      margin-left: 1rem;
+      margin-right: 1rem; } }
+  .instruction__desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+    @media only screen and (max-width: 21.87em) {
+      .instruction__desktop {
+        margin-left: 1rem;
+        flex-direction: column-reverse; } }
+  .instruction__arrows {
+    max-width: 50%;
+    display: inline-block;
+    display: grid;
+    grid-gap: 0.4rem;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    overflow: hidden;
+    align-items: center;
+    justify-items: center;
+    transition: all 1s ease-in;
+    padding: 0.5rem;
+    margin-right: 1rem; }
+  .instruction__arrow {
+    width: 3rem;
+    height: 3rem;
+    padding: 1rem;
+    display: inline-block;
+    border: 1px solid currentColor;
+    border-radius: 9px;
+    margin-top: 0;
+    color: #574f47;
+    transition: all 1s ease-in;
+    transform: scale(1); }
+    .instruction__arrow--up {
+      grid-row: 1 / 2;
+      grid-column: 2 / 3; }
+      .instruction__arrow--up.js-animation {
+        animation: 0.5s forwards scaleUp ease-in;
+        animation-delay: 0.2s; }
+      .instruction__arrow--up.js-animation-fast {
+        animation: 0.1s forwards scaleUpFast ease-in; }
+    .instruction__arrow--left {
+      grid-row: 2 / 3;
+      grid-column: 1 / 2; }
+      .instruction__arrow--left.js-animation {
+        animation: 0.5s forwards scaleUp ease-in; }
+      .instruction__arrow--left.js-animation-fast {
+        animation: 0.1s forwards scaleUpFast ease-in; }
+    .instruction__arrow--down {
+      grid-row: 2 / 3;
+      grid-column: 2 / 3; }
+      .instruction__arrow--down.js-animation {
+        animation: 0.5s forwards scaleUp ease-in;
+        animation-delay: 0.3s; }
+      .instruction__arrow--down.js-animation-fast {
+        animation: 0.1s forwards scaleUpFast ease-in; }
+    .instruction__arrow--right {
+      grid-row: 2 / 3;
+      grid-column: 3 / 4; }
+      .instruction__arrow--right.js-animation {
+        animation: 0.5s forwards scaleUp ease-in;
+        animation-delay: 0.6s; }
+      .instruction__arrow--right.js-animation-fast {
+        animation: 0.1s forwards scaleUpFast ease-in; }
+  .instruction__text {
+    font-family: "Open Sans", sans-serif;
+    justify-self: end;
+    align-self: start;
+    max-width: 25rem;
+    font-size: 1.6rem;
+    line-height: 1.4; }
+    @media only screen and (max-width: 21.87em) {
+      .instruction__text {
+        align-self: center;
+        margin-bottom: 2rem; } }
+    .instruction__text span {
+      font-weight: 600; }
+
 .header {
   max-width: 48rem;
   margin-inline: auto;
-  margin-top: 8rem;
+  margin-top: 4rem;
   color: var(--color-text-dark);
   display: grid;
   grid-template-columns: 45% auto;
   position: relative; }
-  @media only screen and (max-width: 34.375em) {
+  @media only screen and (max-width: 21.87em) {
     .header {
-      margin-top: 4rem; } }
+      margin-left: 2rem;
+      margin-right: 2rem; } }
   .header__title {
     font-size: 7rem;
     letter-spacing: 4px; }
@@ -152,8 +264,13 @@ h1 {
   translate: all 0.3s;
   opacity: 0;
   transform: translate(-50%, 200%);
-  pointer-events: none;
-  animation: slideUp 0.3s forwards; }
+  pointer-events: none; }
+  @media only screen and (min-width: 34.375em) {
+    .game-over {
+      animation: slideUpSmall 0.3s forwards; } }
+  @media only screen and (max-width: 34.375em) {
+    .game-over {
+      animation: slideUpBig 0.3s forwards; } }
 
 .winner {
   position: absolute;
@@ -186,10 +303,15 @@ h1 {
     opacity: 1;
     transform: scale(1); } }
 
-@keyframes slideUp {
+@keyframes slideUpSmall {
   to {
     opacity: 1;
-    transform: translate(-50%, 0); } }
+    transform: translate(-50%, -20%); } }
+
+@keyframes slideUpBig {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%); } }
 
 .tile-2 {
   --color-bg: #efece8;

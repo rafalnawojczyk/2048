@@ -5,6 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Try your best in 2048 game. Game built by using Vanilla JS, SCSS and HTML." />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="font/stylesheet.css" />
         <link rel="stylesheet" href="css/style.css" />
         <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png" />
@@ -34,6 +37,91 @@
                 </div>
             </header>
             <div class="game"></div>
+            <div class="instruction">
+                <div class="instruction__mobile"></div>
+                <div class="instruction__desktop">
+                    <div class="instruction__arrows">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="instruction__arrow instruction__arrow--up"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="1"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <desc>Download more icon variants from https://tabler-icons.io/i/arrow-big-top</desc>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M9 20v-8h-3.586a1 1 0 0 1 -.707 -1.707l6.586 -6.586a1 1 0 0 1 1.414 0l6.586 6.586a1 1 0 0 1 -.707 1.707h-3.586v8a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"
+                            />
+                        </svg>
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="instruction__arrow instruction__arrow--left"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="1"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <desc>Download more icon variants from https://tabler-icons.io/i/arrow-big-left</desc>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M20 15h-8v3.586a1 1 0 0 1 -1.707 .707l-6.586 -6.586a1 1 0 0 1 0 -1.414l6.586 -6.586a1 1 0 0 1 1.707 .707v3.586h8a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1z"
+                            />
+                        </svg>
+
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="instruction__arrow instruction__arrow--down"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="1"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <desc>Download more icon variants from https://tabler-icons.io/i/arrow-big-down</desc>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M15 4v8h3.586a1 1 0 0 1 .707 1.707l-6.586 6.586a1 1 0 0 1 -1.414 0l-6.586 -6.586a1 1 0 0 1 .707 -1.707h3.586v-8a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1z"
+                            />
+                        </svg>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="instruction__arrow instruction__arrow--right"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="1"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <desc>Download more icon variants from https://tabler-icons.io/i/arrow-big-right</desc>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M4 9h8v-3.586a1 1 0 0 1 1.707 -.707l6.586 6.586a1 1 0 0 1 0 1.414l-6.586 6.586a1 1 0 0 1 -1.707 -.707v-3.586h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1z"
+                            />
+                        </svg>
+                    </div>
+                    <div class="instruction__text">
+                        <span>HOW TO PLAY:</span> <br />Use your <span>arrow keys</span> or <span>drag your mouse</span> to move tiles
+                        around. Tiles with the same numbers are merged, when they touch. <span>Add them up to 2048!</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script src="script.js"></script>

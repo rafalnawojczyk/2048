@@ -1,42 +1,44 @@
 "use strict";
 
-let tiles = [];
-let score = 0;
-let maxScore = 0;
-let savedMoves = [];
-let savingMovesAmount = 25;
-let undoAnimation, newGameAnimation;
-let movement = 0;
-let initX = null;
-let initY = null;
-let won = false;
+let tiles = [],
+    score = 0,
+    maxScore = 0,
+    savedMoves = [],
+    savingMovesAmount = 25,
+    hasMoved = false,
+    initX = null,
+    initY = null,
+    won = false,
+    boardWidth = 4,
+    undoAnimation,
+    newGameAnimation,
+    arrowAnimationInterval,
+    bestScoreLabel = document.querySelector(".best-score"),
+    actualScoreLabel = document.querySelector(".actual-score"),
+    gameBoard = document.querySelector(".game");
 
 const generateBoard = function () {
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < boardWidth ** 2; i++) {
         let tile = document.createElement("div");
         tile.classList.add(`game-cell`);
         tiles.push(tile);
-        document.querySelector(".game").appendChild(tile);
+        gameBoard.appendChild(tile);
     }
 };
 
 const newGame = function (e) {
-    if (document.querySelector(".game-over")) {
-        undoAnimation?.cancel();
-        newGameAnimation?.cancel();
-        document.querySelector(".header").removeChild(document.querySelector(".game-over"));
-    }
+    e.preventDefault();
+    removeGameOver();
 
     if (score > maxScore) {
         maxScore = score;
-        document.querySelector(".best-score").textContent = score;
+        bestScoreLabel.textContent = score;
     }
 
     score = 0;
-    document.querySelector(".actual-score").textContent = 0;
-    e.preventDefault();
     tiles = [];
-    document.querySelector(".game").innerHTML = "";
+    actualScoreLabel.textContent = 0;
+    gameBoard.innerHTML = "";
     generateBoard();
     generateTile();
     generateTile();
@@ -99,218 +101,100 @@ const animationSlideDown = function (that) {
 };
 
 const slideTiles = function (direction) {
-    const checkForChanges = function (newRow, rowArray) {
-        let changes = 0;
-        for (let y = 0; y < 4; y++) {
-            if (newRow[y] !== rowArray[y]) {
-                changes++;
-            }
-        }
-        if (changes) {
-            movement++;
+    const tileHasMoved = function (newRow, rowArray) {
+        for (let y = 0; y < boardWidth; y++) {
+            hasMoved = newRow[y] !== rowArray[y] ? true : hasMoved;
         }
     };
 
-    if (direction === "ArrowDown") {
-        for (let i = 0; i < 4; i++) {
-            let columnArray = [+tiles[i].textContent, +tiles[i + 4].textContent, +tiles[i + 8].textContent, +tiles[i + 12].textContent];
+    const dir = {
+        ArrowDown: 0,
+        ArrowUp: 1,
+        ArrowRight: 2,
+        ArrowLeft: 3,
+
+        iterationStart: [0, 0, 0, 0],
+        iterationEnd: [4, 4, 16, 16],
+        column1: [0, 12, 0, 3],
+        column2: [4, 8, 1, 2],
+        column3: [8, 4, 2, 1],
+        column4: [12, 0, 3, 0],
+        divisor: [1, 1, 4, 4],
+    };
+
+    const num = dir[direction];
+
+    for (let i = dir.iterationStart[num]; i < dir.iterationEnd[num]; i++) {
+        if (i % dir.divisor[num] === 0) {
+            let columnArray = [
+                +tiles[i + dir.column1[num]].textContent,
+                +tiles[i + dir.column2[num]].textContent,
+                +tiles[i + dir.column3[num]].textContent,
+                +tiles[i + dir.column4[num]].textContent,
+            ];
             let filteredColumn = columnArray.filter(value => value);
             let newColumn = new Array(4 - filteredColumn.length).fill(0);
             newColumn = [...newColumn, ...filteredColumn];
 
-            updateCell(i, newColumn[0]);
-            updateCell(i + 4, newColumn[1]);
-            updateCell(i + 8, newColumn[2]);
-            updateCell(i + 12, newColumn[3]);
-            checkForChanges(newColumn, columnArray);
-        }
-    }
-
-    if (direction === "ArrowUp") {
-        for (let i = 0; i < 4; i++) {
-            let columnArray = [+tiles[i + 12].textContent, +tiles[i + 8].textContent, +tiles[i + 4].textContent, +tiles[i].textContent];
-            let filteredColumn = columnArray.filter(value => value);
-            let newColumn = new Array(4 - filteredColumn.length).fill(0);
-            newColumn = [...newColumn, ...filteredColumn];
-
-            updateCell(i + 12, newColumn[0]);
-            updateCell(i + 8, newColumn[1]);
-            updateCell(i + 4, newColumn[2]);
-            updateCell(i, newColumn[3]);
-            checkForChanges(newColumn, columnArray);
-        }
-    }
-
-    if (direction === "ArrowRight") {
-        for (let i = 0; i < 16; i++) {
-            if (i % 4 === 0) {
-                let rowArray = [+tiles[i].textContent, +tiles[i + 1].textContent, +tiles[i + 2].textContent, +tiles[i + 3].textContent];
-                let filteredRow = rowArray.filter(value => value);
-                let newRow = new Array(4 - filteredRow.length).fill(0);
-                newRow = [...newRow, ...filteredRow];
-
-                updateCell(i, newRow[0]);
-                updateCell(i + 1, newRow[1]);
-                updateCell(i + 2, newRow[2]);
-                updateCell(i + 3, newRow[3]);
-                checkForChanges(newRow, rowArray);
-            }
-        }
-    }
-
-    if (direction === "ArrowLeft") {
-        for (let i = 0; i < 16; i++) {
-            if (i % 4 === 0) {
-                let rowArray = [+tiles[i + 3].textContent, +tiles[i + 2].textContent, +tiles[i + 1].textContent, +tiles[i].textContent];
-                let filteredRow = rowArray.filter(value => value);
-                let newRow = new Array(4 - filteredRow.length).fill(0);
-                newRow = [...newRow, ...filteredRow];
-
-                updateCell(i + 3, newRow[0]);
-                updateCell(i + 2, newRow[1]);
-                updateCell(i + 1, newRow[2]);
-                updateCell(i, newRow[3]);
-
-                checkForChanges(newRow, rowArray);
-            }
+            updateCell(i + dir.column1[num], newColumn[0]);
+            updateCell(i + dir.column2[num], newColumn[1]);
+            updateCell(i + dir.column3[num], newColumn[2]);
+            updateCell(i + dir.column4[num], newColumn[3]);
+            tileHasMoved(newColumn, columnArray);
         }
     }
 };
 
 const combineTiles = function (direction) {
-    if (direction === "ArrowLeft") {
-        for (let i = 0; i < 16; i++) {
-            if (i % 4 === 0) {
-                if (+tiles[i].textContent === +tiles[i + 1].textContent) {
-                    let value = +tiles[i].textContent + +tiles[i + 1].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 1);
-                        updateCell(i, value);
-                        score += value;
-                        movement++;
-                    }
-                }
+    const dir = {
+        ArrowUp: 0,
+        ArrowDown: 1,
+        ArrowLeft: 2,
+        ArrowRight: 3,
+        iterationStart: [0, 0, 0, 0],
+        iterationEnd: [4, 4, 16, 16],
+        column1: [0, 12, 0, 3],
+        column2: [4, 8, 1, 2],
+        column3: [8, 4, 2, 1],
+        column4: [12, 0, 3, 0],
+        divisor: [1, 1, 4, 4],
+        clear1: [4, 12, 1, 3],
+        clear2: [8, 8, 2, 2],
+        clear3: [12, 4, 3, 1],
+        update1: [0, 8, 0, 2],
+        update2: [4, 4, 1, 1],
+        update3: [8, 0, 2, 0],
+    };
 
-                if (+tiles[i + 1].textContent === +tiles[i + 2].textContent) {
-                    let value = +tiles[i + 1].textContent + +tiles[i + 2].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 2);
-                        updateCell(i + 1, value);
-                        score += value;
-                        movement++;
-                    }
-                }
+    const num = dir[direction];
 
-                if (+tiles[i + 2].textContent === +tiles[i + 3].textContent) {
-                    let value = +tiles[i + 2].textContent + +tiles[i + 3].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 3);
-                        updateCell(i + 2, value);
-                        score += value;
-                        movement++;
-                    }
-                }
-            }
-        }
-    }
-    if (direction === "ArrowRight") {
-        for (let i = 0; i < 16; i++) {
-            if (i % 4 === 0) {
-                if (+tiles[i + 3].textContent === +tiles[i + 2].textContent) {
-                    let value = +tiles[i + 3].textContent + +tiles[i + 2].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 3);
-                        updateCell(i + 2, value);
-                        score += value;
-                        movement++;
-                    }
-                }
-
-                if (+tiles[i + 2].textContent === +tiles[i + 1].textContent) {
-                    let value = +tiles[i + 2].textContent + +tiles[i + 1].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 2);
-                        updateCell(i + 1, value);
-                        score += value;
-                        movement++;
-                    }
-                }
-
-                if (+tiles[i + 1].textContent === +tiles[i].textContent) {
-                    let value = +tiles[i + 1].textContent + +tiles[i].textContent;
-                    if (value !== 0) {
-                        clearCell(i + 1);
-                        updateCell(i, value);
-                        score += value;
-                        movement++;
-                    }
-                }
-            }
-        }
-    }
-
-    if (direction === "ArrowUp") {
-        for (let i = 0; i < 4; i++) {
-            if (+tiles[i].textContent === +tiles[i + 4].textContent) {
-                let value = +tiles[i].textContent + +tiles[i + 4].textContent;
+    for (let i = dir.iterationStart[num]; i < dir.iterationEnd[num]; i++) {
+        if (i % dir.divisor[num] === 0) {
+            if (+tiles[i + dir.column1[num]].textContent === +tiles[i + dir.column2[num]].textContent) {
+                let value = +tiles[i + dir.column1[num]].textContent + +tiles[i + dir.column2[num]].textContent;
                 if (value !== 0) {
-                    clearCell(i + 4);
-                    updateCell(i, value);
+                    clearCell(i + dir.clear1[num]);
+                    updateCell(i + dir.update1[num], value);
                     score += value;
-                    movement++;
+                    hasMoved = true;
                 }
             }
-
-            if (+tiles[i + 4].textContent === +tiles[i + 8].textContent) {
-                let value = +tiles[i + 4].textContent + +tiles[i + 8].textContent;
+            if (+tiles[i + dir.column2[num]].textContent === +tiles[i + dir.column3[num]].textContent) {
+                let value = +tiles[i + dir.column2[num]].textContent + +tiles[i + dir.column3[num]].textContent;
                 if (value !== 0) {
-                    clearCell(i + 8);
-                    updateCell(i + 4, value);
+                    clearCell(i + dir.clear2[num]);
+                    updateCell(i + dir.update2[num], value);
                     score += value;
-                    movement++;
+                    hasMoved = true;
                 }
             }
-
-            if (+tiles[i + 8].textContent === +tiles[i + 12].textContent) {
-                let value = +tiles[i + 8].textContent + +tiles[i + 12].textContent;
+            if (+tiles[i + dir.column3[num]].textContent === +tiles[i + dir.column4[num]].textContent) {
+                let value = +tiles[i + dir.column3[num]].textContent + +tiles[i + dir.column4[num]].textContent;
                 if (value !== 0) {
-                    clearCell(i + 12);
-                    updateCell(i + 8, value);
+                    clearCell(i + dir.clear3[num]);
+                    updateCell(i + dir.update3[num], value);
                     score += value;
-                    movement++;
-                }
-            }
-        }
-    }
-    if (direction === "ArrowDown") {
-        for (let i = 0; i < 4; i++) {
-            if (+tiles[i + 12].textContent === +tiles[i + 8].textContent) {
-                let value = +tiles[i + 12].textContent + +tiles[i + 8].textContent;
-                if (value !== 0) {
-                    clearCell(i + 12);
-                    updateCell(i + 8, value);
-                    score += value;
-                    movement++;
-                }
-            }
-
-            if (+tiles[i + 8].textContent === +tiles[i + 4].textContent) {
-                let value = +tiles[i + 8].textContent + +tiles[i + 4].textContent;
-                if (value !== 0) {
-                    clearCell(i + 8);
-                    updateCell(i + 4, value);
-                    score += value;
-                    movement++;
-                }
-            }
-
-            if (+tiles[i + 4].textContent === +tiles[i].textContent) {
-                let value = +tiles[i + 4].textContent + +tiles[i].textContent;
-                if (value !== 0) {
-                    clearCell(i + 4);
-                    updateCell(i, value);
-                    score += value;
-                    movement++;
+                    hasMoved = true;
                 }
             }
         }
@@ -318,12 +202,12 @@ const combineTiles = function (direction) {
 };
 
 const updateScore = function () {
-    document.querySelector(".actual-score").textContent = score;
+    actualScoreLabel.textContent = score;
 };
 
 const updateTiles = function (event) {
     if (document.querySelector(".winner")) {
-        document.querySelector(".game").removeChild(document.querySelector(".winner"));
+        gameBoard.removeChild(document.querySelector(".winner"));
     }
 
     if (event === "ArrowUp" || event === "ArrowDown" || event === "ArrowLeft" || event === "ArrowRight") {
@@ -331,12 +215,13 @@ const updateTiles = function (event) {
         slideTiles(event);
         combineTiles(event);
         slideTiles(event);
-        if (movement === 0 && !document.querySelector(".game-over")) {
+        highlightKey(event);
+        if (hasMoved === false && !document.querySelector(".game-over")) {
             savedMoves.pop();
         }
-        if (movement > 0) {
+        if (hasMoved) {
             generateTile();
-            movement = 0;
+            hasMoved = false;
         }
 
         updateScore();
@@ -371,10 +256,10 @@ const loadSavedGame = function () {
 
     if (val > 4) {
         score = +savedStateStored[16];
-        document.querySelector(".actual-score").textContent = score;
+        actualScoreLabel.textContent = score;
         maxScore = maxScoreStored;
-        document.querySelector(".best-score").textContent = +maxScoreStored;
-        for (let i = 0; i < 16; i++) {
+        bestScoreLabel.textContent = +maxScoreStored;
+        for (let i = 0; i < boardWidth ** 2; i++) {
             if (savedStateStored[savedStateStored.length - 1]) {
                 updateCell(i, savedStateStored[i]);
             } else {
@@ -383,21 +268,23 @@ const loadSavedGame = function () {
         }
     }
 };
-
-const undoMove = function (e) {
-    e.preventDefault();
+const removeGameOver = function () {
     if (document.querySelector(".game-over")) {
         undoAnimation?.cancel();
         newGameAnimation?.cancel();
         document.querySelector(".header").removeChild(document.querySelector(".game-over"));
     }
+};
 
+const undoMove = function (e) {
+    e.preventDefault();
+    removeGameOver();
     if (savedMoves.length > 0) {
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < boardWidth ** 2; i++) {
             if (savedMoves[savedMoves.length - 1][i]) {
                 updateCell(i, savedMoves[savedMoves.length - 1][i]);
                 score = savedMoves[savedMoves.length - 1][16];
-                document.querySelector(".actual-score").textContent = score;
+                actualScoreLabel.textContent = score;
             } else {
                 clearCell(i);
             }
@@ -430,7 +317,7 @@ const checkGameOver = function () {
         }
 
         // Row
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < boardWidth ** 2; i++) {
             if (i % 4 === 0) {
                 if (
                     +tiles[i].textContent === +tiles[i + 1].textContent ||
@@ -487,12 +374,12 @@ const gameWon = function () {
     winner.innerHTML = `<span class="winner__title">You won!</span> 
                             <p class="winner__message">Swipe or use arrow keys to improve your score!</p>`;
 
-    document.querySelector(".game").appendChild(winner);
+    gameBoard.appendChild(winner);
 };
 
 const saveSessionStorage = function (lastState) {
     window.localStorage.setItem("savedState", lastState);
-    window.localStorage.setItem("savedBest", +document.querySelector(".best-score").textContent);
+    window.localStorage.setItem("savedBest", +bestScoreLabel.textContent);
 };
 
 const startTouch = function (e) {
@@ -527,13 +414,42 @@ const moveTouch = function (e) {
     initX = initY = null;
 };
 
-document.querySelector(".game").addEventListener("touchstart", startTouch, false);
-document.querySelector(".game").addEventListener("touchmove", moveTouch, false);
+const animateArrows = function () {
+    const arrowKeys = document.querySelectorAll(".instruction__arrow");
+    const arrowContainer = document.querySelector(".instruction__arrows");
+
+    arrowKeys.forEach(el => el.classList.toggle("js-animation"));
+    arrowContainer.classList.toggle(".js-animation");
+
+    setTimeout(function () {
+        arrowKeys.forEach(el => el.classList.toggle("js-animation"));
+        arrowContainer.classList.toggle(".js-animation");
+    }, 1500);
+};
+
+const highlightKey = function (event) {
+    const eventObj = {
+        ArrowUp: ".instruction__arrow--up",
+        ArrowDown: ".instruction__arrow--down",
+        ArrowLeft: ".instruction__arrow--left",
+        ArrowRight: ".instruction__arrow--right",
+    };
+    const arrowKey = document.querySelector(eventObj[event]);
+    arrowKey.classList.toggle("js-animation-fast");
+    setTimeout(() => arrowKey.classList.toggle("js-animation-fast"), 100);
+};
+
+// EVENT LISTENERS
+
+gameBoard.addEventListener("touchstart", startTouch, false);
+gameBoard.addEventListener("touchmove", moveTouch, false);
 
 document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
     generateTile();
     generateTile();
+    setTimeout(animateArrows, 1000);
+    arrowAnimationInterval = setInterval(animateArrows, 4000);
     if (window.localStorage.getItem("savedState")) {
         loadSavedGame();
     }
@@ -542,6 +458,9 @@ document.addEventListener("DOMContentLoaded", function (e) {
 document.addEventListener("keydown", function (event) {
     if (event.repeat) {
         return;
+    }
+    if (arrowAnimationInterval) {
+        clearInterval(arrowAnimationInterval);
     }
     updateTiles(event.key);
 });
