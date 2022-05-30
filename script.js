@@ -383,16 +383,18 @@ const saveSessionStorage = function (lastState) {
 };
 
 const startTouch = function (e) {
-    initX = e.touches[0].clientX;
-    initY = e.touches[0].clientY;
+    e.preventDefault();
+
+    initX = e.clientX;
+    initY = e.clientY;
 };
 
 const moveTouch = function (e) {
     e.preventDefault();
 
     if (initX === null || initY === null) return;
-    let currentX = e.touches[0].clientX;
-    let currentY = e.touches[0].clientY;
+    let currentX = e.clientX;
+    let currentY = e.clientY;
 
     let moveX = initX - currentX;
     let moveY = initY - currentY;
@@ -446,8 +448,10 @@ const highlightKey = function (event) {
 
 // EVENT LISTENERS
 
-gameBoard.addEventListener("touchstart", startTouch, false);
-gameBoard.addEventListener("touchmove", moveTouch, false);
+gameBoard.addEventListener("pointerdown", startTouch, false);
+gameBoard.addEventListener("pointerup", moveTouch, false);
+
+gameBoard.addEventListener("touchstart", e => e.preventDefault());
 
 document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
