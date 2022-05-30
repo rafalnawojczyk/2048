@@ -8,6 +8,7 @@ let tiles = [],
     hasMoved = false,
     initX = null,
     initY = null,
+    movedTouch = false,
     won = false,
     boardWidth = 4,
     undoAnimation,
@@ -392,30 +393,32 @@ const startTouch = function (e) {
 const moveTouch = function (e) {
     e.preventDefault();
 
+    if (movedTouch) return;
+
     if (initX === null || initY === null) return;
     let currentX = e.clientX;
     let currentY = e.clientY;
 
     let moveX = initX - currentX;
     let moveY = initY - currentY;
+    if (!movedTouch && Math.abs(Math.abs(moveX) - Math.abs(moveY)) > 40) {
+        movedTouch = true;
+        if (Math.abs(moveX) > Math.abs(moveY)) {
+            arrowAnimationInterval ? clearInterval(arrowAnimationInterval) : "";
 
-    if (Math.abs(moveX) > Math.abs(moveY)) {
-        arrowAnimationInterval ? clearInterval(arrowAnimationInterval) : "";
-
-        if (moveX > 0) {
-            updateTiles("ArrowLeft");
+            if (moveX > 0) {
+                updateTiles("ArrowLeft");
+            } else {
+                updateTiles("ArrowRight");
+            }
         } else {
-            updateTiles("ArrowRight");
-        }
-    } else {
-        if (moveY > 0) {
-            updateTiles("ArrowUp");
-        } else {
-            updateTiles("ArrowDown");
+            if (moveY > 0) {
+                updateTiles("ArrowUp");
+            } else {
+                updateTiles("ArrowDown");
+            }
         }
     }
-
-    initX = initY = null;
 };
 
 const animateArrows = function () {
@@ -449,7 +452,16 @@ const highlightKey = function (event) {
 // EVENT LISTENERS
 
 gameBoard.addEventListener("pointerdown", startTouch, false);
-gameBoard.addEventListener("pointerup", moveTouch, false);
+gameBoard.addEventListener("pointermove", moveTouch, false);
+gameBoard.addEventListener(
+    "pointerup",
+    e => {
+        e.preventDefault();
+        initX = initY = null;
+        movedTouch = false;
+    },
+    false
+);
 
 gameBoard.addEventListener("touchstart", e => e.preventDefault());
 
