@@ -30,14 +30,17 @@
                         <span class="best-score">0</span>
                     </div>
                 </div>
-                <div class="header__description">Try your best, and reach 2048 tile!</div>
-                <div class="header__buttons">
+                <div class="header__description">
+                    Try your best, and reach 2048 tile!
+                    <a href="#howtoplay" class="header__link">How to play &rarr;</a>
+                </div>
+                <div class="header__buttons" id="game-start">
                     <button class="header__btn header__btn--undo"><img src="img/undo.svg" alt="Undo button" /></button>
                     <button class="header__btn header__btn--new-game">New Game</button>
                 </div>
             </header>
-            <div class="game"></div>
-            <div class="instruction">
+            <div class="game" id="game"></div>
+            <div class="instruction" id="howtoplay">
                 <div class="instruction__mobile">
                     <div class="instruction__phone-box">
                         <svg
@@ -738,6 +741,7 @@
                     <div class="instruction__text">
                         <span>HOW TO PLAY:</span> <br /><span>Slide your finger</span> to move tiles around. Tiles with the same numbers are
                         merged, when they touch. <span>Add them up to 2048!</span>
+                        <a href="#game-start" class="header__link">Play &uarr;</a>
                     </div>
                 </div>
                 <div class="instruction__desktop">
@@ -820,6 +824,7 @@
                     <div class="instruction__text">
                         <span>HOW TO PLAY:</span> <br />Use your <span>arrow keys</span> to move tiles around. Tiles with the same numbers
                         are merged, when they touch. <span>Add them up to 2048!</span>
+                        <a href="#game-start" class="header__link">Play &uarr;</a>
                     </div>
                 </div>
             </div>

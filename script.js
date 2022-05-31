@@ -16,7 +16,8 @@ let tiles = [],
     arrowAnimationInterval,
     bestScoreLabel = document.querySelector(".best-score"),
     actualScoreLabel = document.querySelector(".actual-score"),
-    gameBoard = document.querySelector(".game");
+    gameBoard = document.querySelector(".game"),
+    container = document.querySelector(".container");
 
 const generateBoard = function () {
     for (let i = 0; i < boardWidth ** 2; i++) {
@@ -384,8 +385,6 @@ const saveSessionStorage = function (lastState) {
 };
 
 const startTouch = function (e) {
-    e.preventDefault();
-
     initX = e.clientX;
     initY = e.clientY;
 };
@@ -421,6 +420,11 @@ const moveTouch = function (e) {
     }
 };
 
+const endTouch = function (e) {
+    initX = initY = null;
+    movedTouch = false;
+};
+
 const animateArrows = function () {
     const arrowKeys = document.querySelectorAll(".instruction__arrow");
     const arrowContainer = document.querySelector(".instruction__arrows");
@@ -451,19 +455,12 @@ const highlightKey = function (event) {
 
 // EVENT LISTENERS
 
-gameBoard.addEventListener("pointerdown", startTouch, false);
-gameBoard.addEventListener("pointermove", moveTouch, false);
-gameBoard.addEventListener(
-    "pointerup",
-    e => {
-        e.preventDefault();
-        initX = initY = null;
-        movedTouch = false;
-    },
-    false
-);
+container.addEventListener("pointerdown", startTouch);
+container.addEventListener("pointermove", moveTouch);
+container.addEventListener("pointerup", endTouch);
+container.addEventListener("pointercancel", endTouch);
 
-gameBoard.addEventListener("touchstart", e => e.preventDefault());
+// container.addEventListener("touchstart", e => e.preventDefault());
 
 document.addEventListener("DOMContentLoaded", function (e) {
     generateBoard();
